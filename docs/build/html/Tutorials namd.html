@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NAMD &mdash; SIRAH Force Field  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=3437f865" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="_static/copybutton.js?v=f281be69"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SIRAH tools" href="Tutorials%20sirahtools.html" />
+    <link rel="prev" title="GROMACS" href="Tutorials%20gromacs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SIRAH Force Field
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="About%20SIRAH.html">About SIRAH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Background%20SIRAH.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Citation.html">Citations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Further%20reading.html">Further Reading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FAQ.html">FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Developers.html">Developers</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorials%20amber.html">AMBER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials%20gromacs.html">GROMACS</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NAMD</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-sirah">Setting up SIRAH</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#required-software">Required Software</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prior-knowledge">Prior knowledge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#download-and-setting-up-sirah">Download and Setting up SIRAH</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#proteins-in-explicit-solvent">1. Proteins in explicit solvent</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#build-cg-representations">1.1. Build CG representations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prepare-with-leap">1.2. Prepare with LEaP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-leap">1.3. Run LEaP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-backbone-and-protein-restraints">1.4. Create Backbone and Protein restraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-the-simulation">1.5. Run the simulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#namd2">1.5.1 NAMD2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#namd3">1.5.2 NAMD3</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#visualizing-the-simulation">1.6. Visualizing the simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-modify-input-files">1.7 How to modify input files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#all-files">1.7.1 All files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#energy-minimization">1.7.2 Energy minimization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#heating">1.7.3 Heating</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#equilibration">1.7.4 Equilibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#production">1.7.5 Production</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials%20sirahtools.html">SIRAH tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials%20analysis.html">Basic analyses VMD</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SIRAH Force Field</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">NAMD</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Tutorials namd.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="namd">
+<h1>NAMD<a class="headerlink" href="#namd" title="Link to this heading"></a></h1>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The tutorials in this section use the inherent capability of NAMD to read AMBER parameters and topology files (e.g. prmtop). For additional information, please refer to the <a class="reference external" href="https://ambermd.org/namd/namd_amber.html">Using the AMBER force field in NAMD documentation</a>.</p>
+</div>
+<section id="setting-up-sirah">
+<span id="id1"></span><h2>Setting up SIRAH<a class="headerlink" href="#setting-up-sirah" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SIRAH Force Field is distributed with <a class="reference external" href="https://ambermd.org/index.php">AMBER</a> and <a class="reference external" href="https://ambermd.org/AmberTools.php">AmberTools</a> official releases.</p>
+</div>
+<section id="required-software">
+<h3>Required Software<a class="headerlink" href="#required-software" title="Link to this heading"></a></h3>
+<p><strong>NAMD</strong></p>
+<p>NAMD (version 2 or later) versions properly installed and running in your computer. In these tutorials, we employ bash aliases to access the NAMD binary executable files.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><a class="reference external" href="https://www.ks.uiuc.edu/Research/namd/">Download</a> the latest version of NAMD2 or NAMD3 and refer to the <em>Download NAMD</em> section for more details on getting NAMD. Binary files of NAMD is provied by <a class="reference external" href="https://www.ks.uiuc.edu/">TCBG Group</a>.</p>
+</div>
+<p><strong>Ambertools</strong></p>
+<p>AmberTools (version 16 or later) versions properly installed and running in your computer.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><a class="reference external" href="https://ambermd.org/GetAmber.php#ambertools">Download</a> the latest version of AmberTools. Go to the <a class="reference external" href="https://ambermd.org/GetAmber.php#ambertools">Install AmberTools</a> page for specific instructions based on your operating system.</p>
+</div>
+<p><strong>VMD</strong></p>
+<p>The molecular visualization program <a class="reference external" href="https://www.ks.uiuc.edu/Research/vmd/">VMD</a>, version 1.9.3 or later (<a class="reference external" href="https://www.ks.uiuc.edu/Development/Download/download.cgi?PackageName=VMD">freely available download</a>). Check VMD’s <a class="reference external" href="https://www.ks.uiuc.edu/Research/vmd/current/ig/node6.html">Installation guide</a> for more instructions.</p>
+</section>
+<section id="prior-knowledge">
+<h3>Prior knowledge<a class="headerlink" href="#prior-knowledge" title="Link to this heading"></a></h3>
+<p>How to perform a standard atomistic molecular dynamics simulations with NAMD, how to use AmberTools to build systems, and basic usage of VMD.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><strong>NAMD</strong></p>
+<p>If you are not familiar with atomistic molecular dynamics simulations in NAMD, we strongly recommend you to perform the basic usage tutorials of NAMD: <a class="reference external" href="https://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/index.html">NAMD TUTORIAL Unix/MacOSX Version</a>. For more details and documentation, check <a class="reference external" href="https://www.ks.uiuc.edu/Research/namd/3.0/ug/">NAMD User’s Guide</a>.</p>
+<p><strong>AmberTools</strong></p>
+<p>We strongly recommend you to perform the basic usage tutorials of AmberTools: <a class="reference external" href="https://ambermd.org/tutorials/BuildingSystems.php">1. Building Systems</a>, <a class="reference external" href="https://ambermd.org/tutorials/Relaxation.php">3. Creating Stable Systems and Running MD</a> and <a class="reference external" href="https://ambermd.org/tutorials/Introductory.php">5. Case Studies</a>. For more details and documentation, check <a class="reference external" href="https://ambermd.org/doc12/Amber23.pdf">Amber23 Manual</a>.</p>
+<p><strong>VMD</strong></p>
+<p>If you are not familiar with VMD, we strongly recommend you to perform the basic usage tutorial of VMD (<a class="reference external" href="https://www.ks.uiuc.edu/Training/Tutorials/vmd/tutorial-html/index.html">Using VMD</a>). For more details and documentation, check <a class="reference external" href="https://www.ks.uiuc.edu/Research/vmd/current/ug/ug.html">VMD User Guide</a> and the official <a class="reference external" href="https://www.ks.uiuc.edu/Research/vmd/current/docs.html#tutorials">VMD documentation</a>.</p>
+</div>
+</section>
+<section id="download-and-setting-up-sirah">
+<h3>Download and Setting up SIRAH<a class="headerlink" href="#download-and-setting-up-sirah" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The simulations use the inherent functionality of NAMD to parse AMBER parameters and topology files. Thus, the LEaP module of AmberTools is used to generate the input files.</p>
+<p>Please report bugs, errors or enhancement requests through <a class="reference external" href="https://github.com/SIRAHFF/documentation/issues">Issue Tracker</a> or if you have a question about SIRAH open a <a class="reference external" href="https://github.com/SIRAHFF/documentation/discussions">New Discussion</a>.</p>
+</div>
+<p>Download <a class="reference external" href="https://github.com/SIRAHFF/documentation/releases/tag/AMBER">SIRAH for Amber</a> and uncompress it into your working directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tar<span class="w"> </span>-xzvf<span class="w"> </span>sirah_x2.3_24-07.amber.tar.gz
+</pre></div>
+</div>
+<p>If you are using a different version of SIRAH, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tar<span class="w"> </span>-xzvf<span class="w"> </span>sirah_<span class="o">[</span>version<span class="o">]</span>.amber.tgz
+</pre></div>
+</div>
+<p>You will get the folder <code class="docutils literal notranslate"><span class="pre">sirah_[version].amber/</span></code> containing the force field definition, SIRAH Tools in the
+<code class="docutils literal notranslate"><span class="pre">sirah_[version].amber/tools/</span></code> folder, molecular structures to build up systems in <code class="docutils literal notranslate"><span class="pre">sirah_[version].amber/PDB/</span></code> and the required material to perform the tutorials in <code class="docutils literal notranslate"><span class="pre">sirah_[version].amber/tutorial/NAMD/X.X/</span></code></p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Remember to change <strong>X.X</strong> to the number that corresponds to the tutorial you are going to do.</p>
+</div>
+<p>Make a new folder for this tutorial in your working directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>tutorialX.X<span class="p">;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>tutorialX.X
+</pre></div>
+</div>
+<p>Create the following symbolic link in the folder tutorialX.X:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ln<span class="w"> </span>-s<span class="w"> </span>../sirah_x2.3_24-07.amber<span class="w"> </span>sirah.amber
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SIRAH Force Field is also distributed with <a class="reference external" href="https://ambermd.org/index.php">AMBER</a> and <a class="reference external" href="https://ambermd.org/AmberTools.php">AmberTools</a> official releases. To use the native AMBER version of SIRAH, create a symbolic link located in $AMBERHOME:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ln<span class="w"> </span>-s<span class="w"> </span><span class="nv">$AMBERHOME</span>/dat/SIRAH<span class="w"> </span>sirah.amber
+</pre></div>
+</div>
+<p>Check the <a class="reference external" href="https://ambermd.org/doc12/Amber23.pdf">AMBER Manual</a> section <strong>3.11.2</strong> for more details.</p>
+<p>However, if you want the latest parameters and implementations we strongly advise you to use the developers version of SIRAH from GitHub.</p>
+</div>
+</section>
+</section>
+<section id="proteins-in-explicit-solvent">
+<span id="tutorial-1-n"></span><h2>1. Proteins in explicit solvent<a class="headerlink" href="#proteins-in-explicit-solvent" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please report bugs, errors or enhancement requests through <a class="reference external" href="https://github.com/SIRAHFF/documentation/issues">Issue Tracker</a> or if you have a question about SIRAH open a <a class="reference external" href="https://github.com/SIRAHFF/documentation/discussions">New Discussion</a>.</p>
+</div>
+<p>This tutorial shows how to use the SIRAH force field to perform a coarse grained (CG) simulation of a protein in explicit solvent (called WatFour, WT4). The main references for
+this tutorial are: <a class="reference external" href="https://pubs.acs.org/doi/abs/10.1021/ct100379f">Darré et al.</a>, <a class="reference external" href="https://doi.org/10.1021/acs.jctc.9b00006">Machado et al.</a> and <a class="reference external" href="https://academic.oup.com/bioinformatics/article/32/10/1568/1743152">Machado &amp; Pantano</a>. We strongly advise you to read these articles before starting the tutorial.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Check the <a class="reference internal" href="Tutorials%20amber.html#download-amber"><span class="std std-ref">Setting up SIRAH</span></a> section for download and set up details before starting this tutorial.
+Since this is <strong>Tutorial 1</strong>, remember to replace <code class="docutils literal notranslate"><span class="pre">X.X</span></code> and the files corresponding to this tutorial can be found in: <code class="docutils literal notranslate"><span class="pre">sirah_[version].amber/tutorial/NAMD/1/</span></code></p>
+</div>
+<section id="build-cg-representations">
+<h3>1.1. Build CG representations<a class="headerlink" href="#build-cg-representations" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this section, we use the inherent functionality of NAMD to parse AMBER files. The tLEaP module of AmberTools is used to generate parameters and topology information.</p>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The mapping to CG requires the correct protonation state of each residue at a given pH. We recommend using the <a class="reference external" href="https://www.charmm-gui.org/">CHARMM-GUI server</a> and use the <strong>PDB Reader &amp; Manipulator</strong> to prepare your system. An account is required to access any of the CHARMM-GUI Input Generator modules, and it can take up to 24 hours to obtain one.</p>
+<p>Other option is the <a class="reference external" href="https://server.poissonboltzmann.org/pdb2pqr">PDB2PQR server</a> and choosing the output naming scheme of AMBER for best compatibility. This server was utilized to generate the <em>PQR</em> file featured in this tutorial. Be aware that modified residues lacking parameters such as: MSE (seleno MET), TPO (phosphorylated TYR), SEP (phosphorylated SER) or others are deleted from the PQR file by the server. In that case, mutate the residues to their unmodified form before submitting the structure to the server.</p>
+</div>
+<p>Map the protonated atomistic structure of protein <a class="reference external" href="https://www.rcsb.org/structure/1CRN">1CRN</a> to its CG representation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./sirah.amber/tools/CGCONV/cgconv.pl<span class="w"> </span>-i<span class="w"> </span>./sirah.amber/tutorial/NAMD/1/1CRN.pqr<span class="w"> </span>-o<span class="w"> </span>1CRN_cg.pdb
+</pre></div>
+</div>
+<p>The input file <code class="docutils literal notranslate"><span class="pre">-i</span></code> 1CRN.pqr contains the atomistic representation of <a class="reference external" href="https://www.rcsb.org/structure/1CRN">1CRN</a> structure at pH <strong>7.0</strong>, while the output <code class="docutils literal notranslate"><span class="pre">-o</span></code> 1CRN_cg.pdb is its SIRAH CG representation.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This is the basic usage of the script <strong>cgconv.pl</strong>, you can learn other capabilities from its help by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./sirah.amber/tools/CGCONV/cgconv.pl<span class="w"> </span>-h
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Pay attention to residue names when mapping structures from other atomistic force fields or experimental structures.</strong> Although we provide compatibility for naming schemes in PDB, GMX, GROMOS, CHARMM and OPLS, there might always be some ambiguity in the residue naming, specially regarding protonation states, that may lead to a wrong mapping. For example, SIRAH Tools always maps the residue name “HIS” to a Histidine protonated at the epsilon nitrogen (<span class="math notranslate nohighlight">\(N_{\epsilon}\)</span>) regardless the actual proton placement. Similarly, protonated Glutamic and Aspartic acid residues must be named “GLH” and “ASH”, otherwise they will be treated as negative charged residues. In addition, protonated and disulfide bonded Cysteines must be named “CYS” and “CYX” respectively. These kind of situations need to be carefully checked by the users. In all cases the residues preserve their identity when mapping and back-mapping the structures. Hence, the total charge of the protein should be the same at atomistic and SIRAH levels. You can check the following mapping file to be sure of the compatibility: <code class="docutils literal notranslate"><span class="pre">sirah.amber/tools/CGCONV/maps/sirah_prot.map</span></code>.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>By default, charged termini are used, but it is possible to set them neutral by renaming the residues from <strong>s</strong>[code] to <strong>a</strong>[code] (Nt-acetylated) or <strong>m</strong>[code] (Ct-amidated) after mapping to CG, where [code] is the root residue name in SIRAH. For example, to set a neutral N-terminal Histidine protonated at epsilon nitrogen (<span class="math notranslate nohighlight">\(N_{\epsilon}\)</span>) rename it from “sHe” to “aHe”.</p>
+</div>
+<p>Please check both PDB and PQR structures using VMD:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vmd<span class="w"> </span>-m<span class="w"> </span>sirah.amber/tutorial/NAMD/1/1CRN.pqr<span class="w"> </span>1CRN_cg.pdb
+</pre></div>
+</div>
+<p>From now on it is just normal Amber stuff!</p>
+</section>
+<section id="prepare-with-leap">
+<h3>1.2. Prepare with LEaP<a class="headerlink" href="#prepare-with-leap" title="Link to this heading"></a></h3>
+<p>Use a text editor to create the file <code class="docutils literal notranslate"><span class="pre">gensystem.leap</span></code> including the following lines:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Load<span class="w"> </span>SIRAH<span class="w"> </span>force<span class="w"> </span>field
+<span class="go">addPath ./sirah.amber</span>
+<span class="go">source leaprc.sirah</span>
+
+<span class="gp"># </span>Load<span class="w"> </span>model
+<span class="go">protein = loadpdb 1CRN_cg.pdb</span>
+
+<span class="gp"># </span>Info<span class="w"> </span>on<span class="w"> </span>system<span class="w"> </span>charge
+<span class="go">charge protein</span>
+
+<span class="gp"># </span>Set<span class="w"> </span>S-S<span class="w"> </span>bridges
+<span class="go">bond protein.3.BSG protein.40.BSG</span>
+<span class="go">bond protein.4.BSG protein.32.BSG</span>
+<span class="go">bond protein.16.BSG protein.26.BSG</span>
+
+<span class="gp"># </span>Add<span class="w"> </span>solvent,<span class="w"> </span>counterions<span class="w"> </span>and<span class="w"> </span><span class="m">0</span>.15M<span class="w"> </span>NaCl
+<span class="gp"># </span>Tuned<span class="w"> </span>solute-solvent<span class="w"> </span>closeness<span class="w"> </span><span class="k">for</span><span class="w"> </span>best<span class="w"> </span>hydration
+<span class="go">solvatebox protein WT4BOX 20 0.7</span>
+<span class="go">addIonsRand protein NaW 22 ClW 22</span>
+
+<span class="gp"># </span>Save<span class="w"> </span>Parms
+<span class="go">saveAmberParm protein 1CRN_cg_ionized.prmtop 1CRN_cg_ionized.rst</span>
+<span class="go">savepdb protein 1CRN_cg_ionized.pdb</span>
+
+<span class="gp"># </span>EXIT
+<span class="go">quit</span>
+</pre></div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Each disulfide bond must be defined explicitly in LEaP using the command bond, e.g.: “<em>bond unit.ri.BSG unit.rj.BSG</em>”. Where <em>ri</em> and <em>rj</em> correspond to the residue index in the topology file starting from 1, which may differ from the biological sequence in the PDB file. You can try the command <em>pdb4amber</em> to get those indexes from the atomistic structure, but be aware that it may not work if the Cysteine residues are too far away:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pdb4amber<span class="w"> </span>-i<span class="w"> </span>sirah.amber/tutorial/NAMD/1/1CRN.pqr<span class="w"> </span>-o<span class="w"> </span>1CRN_aa.pdb<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cat<span class="w"> </span>1CRN_aa_sslink
+</pre></div>
+</div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The available electrolyte species in SIRAH force field are: <code class="docutils literal notranslate"><span class="pre">Na⁺</span></code> (NaW), <code class="docutils literal notranslate"><span class="pre">K⁺</span></code> (KW) and <code class="docutils literal notranslate"><span class="pre">Cl⁻</span></code> (ClW) which represent solvated ions in solution. One ion pair (e.g., NaW-ClW) each 34 WT4 molecules results in a salt concentration of ~0.15M (see <a class="reference internal" href="Tutorials%20amber.html#appendix"><span class="std std-ref">Appendix</span></a> for details). Counterions were added according to <a class="reference external" href="https://pubs.acs.org/doi/10.1021/acs.jctc.9b00953">Machado et al.</a>.</p>
+</div>
+</section>
+<section id="run-leap">
+<h3>1.3. Run LEaP<a class="headerlink" href="#run-leap" title="Link to this heading"></a></h3>
+<p>Run the tLEaP application to generate the molecular topology and initial coordinate files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tleap<span class="w"> </span>-f<span class="w"> </span>gensystem.leap
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Warning messages about long, triangular or square bonds in <code class="docutils literal notranslate"><span class="pre">leap.log</span></code> file are fine and expected due to the CG topology of some residues.</p>
+</div>
+<p>This should create a topology file <code class="docutils literal notranslate"><span class="pre">1CRN_cg_ionized.prmtop</span></code> and a coordinate file <code class="docutils literal notranslate"><span class="pre">1CRN_cg_ionized.rst</span></code>. The last line of <code class="docutils literal notranslate"><span class="pre">1CRN_cg_ionized.rst</span></code> file contains the cell dimension information needed in the NAMD configuration file, for additional information, please refer to the <a class="reference external" href="https://ambermd.org/namd/namd_amber.html">Using the AMBER force field in NAMD documentation</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To check the last line of the 1CRN_cg_ionized.rst you can use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>1CRN_cg_ionized.rst
+</pre></div>
+</div>
+<p>Save this information so it can be used in NAMD input files.</p>
+</div>
+<p>For this tutorial, the cell dimensions are:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">73</span>.3223400<span class="w">  </span><span class="m">70</span>.2433400<span class="w">  </span><span class="m">72</span>.8663400<span class="w">  </span><span class="m">90</span>.0000000<span class="w">  </span><span class="m">90</span>.0000000<span class="w">  </span><span class="m">90</span>.0000000
+</pre></div>
+</div>
+<p>The first three values represent the x, y, and z dimensions. The remaining three values define an orthorhombic box.</p>
+<p>Use VMD to check how the CG model looks like and particularly the presence of disulfide bonds:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vmd<span class="w"> </span>1CRN_cg_ionized.prmtop<span class="w"> </span>1CRN_cg_ionized.rst<span class="w"> </span>-e<span class="w"> </span>./sirah.amber/tools/sirah_vmdtk.tcl
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>VMD assigns default radius to unknown atom types, the script <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> sets the right
+ones, according to the CG representation. It also provides a kit of useful selection macros, coloring methods and backmapping utilities.
+Use the command <code class="docutils literal notranslate"><span class="pre">sirah_help</span></code> in the Tcl/Tk console of VMD to access the manual pages. To learn about SIRAH Tools’ capabilities, you can also go to the <a class="reference internal" href="Tutorials%20sirahtools.html#sirah-tools"><span class="std std-ref">SIRAH Tools tutorial</span></a>.</p>
+</div>
+</section>
+<section id="create-backbone-and-protein-restraints">
+<h3>1.4. Create Backbone and Protein restraints<a class="headerlink" href="#create-backbone-and-protein-restraints" title="Link to this heading"></a></h3>
+<p>In NAMD, it is necessary to assign a PDB file that contains the system’s restraints. Generally, this is done by assigning values in the last column of the PDB file that corresponds to the B-factor. These files can be generated using a VMD script.</p>
+<p>Use a text editor to create the file <code class="docutils literal notranslate"><span class="pre">restraints.tcl</span></code> including the following lines:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Load<span class="w"> </span>SIRAH<span class="w"> </span>tools
+<span class="go">source sirah.amber/tools/sirah_vmdtk.tcl</span>
+
+<span class="gp"># </span>Upload<span class="w"> </span>the<span class="w"> </span>system
+<span class="go">mol new 1CRN_cg_ionized.prmtop type parm7 waitfor all</span>
+<span class="go">mol addfile 1CRN_cg_ionized.pdb type pdb waitfor all</span>
+
+<span class="gp"># </span>Clean<span class="w"> </span>B<span class="w"> </span>column
+<span class="go">set all [atomselect top all]</span>
+<span class="gp">$</span>all<span class="w"> </span><span class="nb">set</span><span class="w"> </span>beta<span class="w"> </span><span class="m">0</span>
+
+<span class="gp"># </span>Setup<span class="w"> </span>the<span class="w"> </span>backbone<span class="w"> </span>restraints
+<span class="go">set bb [atomselect top &quot;sirah_protein and sirah_backbone&quot;]</span>
+<span class="gp">$</span>bb<span class="w"> </span><span class="nb">set</span><span class="w"> </span>beta<span class="w"> </span><span class="m">2</span>.4
+<span class="gp">$</span>all<span class="w"> </span>writepdb<span class="w"> </span>bb_restraints.pdb
+
+<span class="gp"># </span>Setup<span class="w"> </span>the<span class="w"> </span>protein<span class="w"> </span>restraints
+<span class="gp">$</span>all<span class="w"> </span><span class="nb">set</span><span class="w"> </span>beta<span class="w"> </span><span class="m">0</span>
+<span class="go">set prot [atomselect top &quot;sirah_protein&quot;]</span>
+<span class="gp">$</span>prot<span class="w"> </span><span class="nb">set</span><span class="w"> </span>beta<span class="w"> </span><span class="m">2</span>.4
+<span class="gp">$</span>all<span class="w"> </span>writepdb<span class="w"> </span>prot_restraints.pdb
+
+<span class="gp"># </span>Exit
+<span class="go">quit</span>
+</pre></div>
+</div>
+<p>Run the VMD script to generate the pdb restriction file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vmd<span class="w"> </span>-dispdev<span class="w"> </span>text<span class="w"> </span>–e<span class="w"> </span>restraints.tcl
+</pre></div>
+</div>
+</section>
+<section id="run-the-simulation">
+<h3>1.5. Run the simulation<a class="headerlink" href="#run-the-simulation" title="Link to this heading"></a></h3>
+<section id="namd2">
+<h4>1.5.1 NAMD2<a class="headerlink" href="#namd2" title="Link to this heading"></a></h4>
+<p>Make a new folder for the run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>run<span class="p">;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>run
+</pre></div>
+</div>
+<p>Copy the input files to the folder:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>sirah.amber/tutorial/NAMD/1/NAMD2/*.conf<span class="w"> </span>.
+</pre></div>
+</div>
+<p>The folder <code class="docutils literal notranslate"><span class="pre">sirah.amber/tutorial/NAMD/1/NAMD2</span></code> contains typical input files for energy minimization (<code class="docutils literal notranslate"><span class="pre">em1.conf</span></code> and <code class="docutils literal notranslate"><span class="pre">em2.conf</span></code>), heating (<code class="docutils literal notranslate"><span class="pre">heat.conf</span></code>), equilibration (<code class="docutils literal notranslate"><span class="pre">eq1.conf</span></code> and <code class="docutils literal notranslate"><span class="pre">eq2.conf</span></code>) and production (<code class="docutils literal notranslate"><span class="pre">md.conf</span></code>) runs.  Please carefully review the input files, paying especially attention to the cell dimension values, names, and restrictions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The same input files can be used to run on CPU or GPU. However, in NAMD2 (CUDA), the number of processors used (+p option) significantly affects performance. By contrast, in NAMD3 (CUDA), this value does not directly correlate to higher performance.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you have more than one GPU card, be sure you set the GPU number properly. For example, in order to utilize GPU 0, it is necessary to execute this command prior to running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>
+</pre></div>
+</div>
+<p>You might also specify which and how many CPUs you need to used. For example, if you require 24 CPUs:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd2<span class="w"> </span>+p24<span class="w"> </span>namd_input.conf<span class="w"> </span>&gt;<span class="w"> </span>namd_input.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>To indicate which cores to use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd2<span class="w"> </span>+setcpuaffinity<span class="w"> </span>+pemap<span class="w"> </span><span class="m">0</span>-23<span class="w"> </span>+p24<span class="w"> </span>namd_input.conf<span class="w"> </span>&gt;<span class="w"> </span>namd_input.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+</div>
+<p><strong>Energy Minimization of side chains and solvent by restraining the backbone:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd2<span class="w"> </span>+p8<span class="w"> </span>em1.conf<span class="w"> </span>&gt;<span class="w"> </span>em1.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this stage, the restriction file <code class="docutils literal notranslate"><span class="pre">bb_restraints.pdb</span></code> is assigned to the consref and conskfile flags.</p>
+</div>
+<p><strong>Energy Minimization of whole system:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd2<span class="w"> </span>+p8<span class="w"> </span>em2.conf<span class="w"> </span>&gt;<span class="w"> </span>em2.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p><strong>Solvent Equilibration (NPT):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd2<span class="w"> </span>+p8<span class="w"> </span>heat.conf<span class="w"> </span>&gt;<span class="w"> </span>heat.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this stage, the restriction file <code class="docutils literal notranslate"><span class="pre">prot_restraints.pdb</span></code> is assigned to the consref and conskfile flags.</p>
+</div>
+<p><strong>Soft equilibration to improve side chain solvation (NPT):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd2<span class="w"> </span>+p8<span class="w"> </span>eq2.conf<span class="w"> </span>&gt;<span class="w"> </span>eq2.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this stage, the restriction file <code class="docutils literal notranslate"><span class="pre">bb_restraints.pdb</span></code> is assigned to the consref and conskfile flags. The constraintScaling is set to 0.1 to soften the restraints.</p>
+</div>
+<p><strong>Production (1000ns):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd2<span class="w"> </span>+p8<span class="w"> </span>md.conf<span class="w"> </span>&gt;<span class="w"> </span>md.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+</section>
+<section id="namd3">
+<h4>1.5.2 NAMD3<a class="headerlink" href="#namd3" title="Link to this heading"></a></h4>
+<p>Make a new folder for the run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>run<span class="p">;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>run
+</pre></div>
+</div>
+<p>Copy the input files to the folder:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>sirah.amber/tutorial/NAMD/1/NAMD3/*.conf<span class="w"> </span>.
+</pre></div>
+</div>
+<p>The folder <code class="docutils literal notranslate"><span class="pre">sirah.amber/tutorial/NAMD/1/NAMD3</span></code> contains typical input files for energy minimization (<code class="docutils literal notranslate"><span class="pre">em1.conf</span></code> and <code class="docutils literal notranslate"><span class="pre">em2.conf</span></code>), heating (<code class="docutils literal notranslate"><span class="pre">heat.conf</span></code>), equilibration (<code class="docutils literal notranslate"><span class="pre">eq1.conf</span></code> and <code class="docutils literal notranslate"><span class="pre">eq2.conf</span></code>) and production (<code class="docutils literal notranslate"><span class="pre">md.conf</span></code>) runs.  Please carefully review the input files, paying especially attention to the cell dimension values, names, and restrictions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The same input files can be used to run on on CPU or GPU. However, in NAMD2 (CUDA), the number of processors used (+p option) significantly affects performance. By contrast, in NAMD3 (CUDA), this value does not directly correlate to higher performance.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To use GPU cards in NAMD3, you need to enable the GPU-resident mode with the CUDASOAintegrate option. In the input files for this tutorial the option is enabled.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span>NAMD3<span class="w"> </span>parameters
+<span class="go">if {1} {                                ;# Enable the block</span>
+<span class="go">CUDASOAintegrate     on                 ;# Enable GPU-resident mode.</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you have more than one GPU card, be sure you set the GPU number properly. For example, in order to utilize GPU 0, it is necessary to execute this command prior to running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>
+</pre></div>
+</div>
+<p>You might also specify which and how many CPUs you need to used. For example, if you require 4 CPUs:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd3<span class="w"> </span>+p4<span class="w"> </span>namd_input.conf<span class="w"> </span>&gt;<span class="w"> </span>namd_input.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>To indicate which cores to use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd3<span class="w"> </span>+setcpuaffinity<span class="w"> </span>+pemap<span class="w"> </span><span class="m">0</span>-3<span class="w"> </span>+p4<span class="w"> </span>namd_input.conf<span class="w"> </span>&gt;<span class="w"> </span>namd_input.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+</div>
+<p><strong>Energy Minimization of side chains and solvent by restraining the backbone:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd3<span class="w"> </span>+p4<span class="w"> </span>em1.conf<span class="w"> </span>&gt;<span class="w"> </span>em1.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this stage, the restriction file <code class="docutils literal notranslate"><span class="pre">bb_restraints.pdb</span></code> is assigned to the consref and conskfile flags.</p>
+</div>
+<p><strong>Energy Minimization of whole system:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd3<span class="w"> </span>+p4<span class="w"> </span>em2.conf<span class="w"> </span>&gt;<span class="w"> </span>em2.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p><strong>Solvent Equilibration (NPT):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd3<span class="w"> </span>+p4<span class="w"> </span>heat.conf<span class="w"> </span>&gt;<span class="w"> </span>heat.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this stage, the restriction file <code class="docutils literal notranslate"><span class="pre">prot_restraints.pdb</span></code> is assigned to the consref and conskfile flags.</p>
+</div>
+<p><strong>Soft equilibration to improve side chain solvation (NPT):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd3<span class="w"> </span>+p4<span class="w"> </span>eq2.conf<span class="w"> </span>&gt;<span class="w"> </span>eq2.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this stage, the restriction file <code class="docutils literal notranslate"><span class="pre">bb_restraints.pdb</span></code> is assigned to the consref and conskfile flags. The constraintScaling is set to 0.1 to soften the former restraints.</p>
+</div>
+<p><strong>Production (1000ns):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>namd3<span class="w"> </span>+p4<span class="w"> </span>md.conf<span class="w"> </span>&gt;<span class="w"> </span>md.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="visualizing-the-simulation">
+<h3>1.6. Visualizing the simulation<a class="headerlink" href="#visualizing-the-simulation" title="Link to this heading"></a></h3>
+<p>That’s it! Now you can analyze the trajectory.</p>
+<p>Load the processed trajectory in VMD:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vmd</span> <span class="o">../</span><span class="mi">1</span><span class="n">CRN_cg_ionized</span><span class="o">.</span><span class="n">prmtop</span> <span class="n">MD</span><span class="o">.</span><span class="n">dcd</span> <span class="o">-</span><span class="n">e</span> <span class="n">sirah</span><span class="o">.</span><span class="n">amber</span><span class="o">/</span><span class="n">tools</span><span class="o">/</span><span class="n">sirah_vmdtk</span><span class="o">.</span><span class="n">tcl</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The file <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> is a Tcl script that is part of SIRAH Tools and contains the macros to properly visualize the coarse-grained structures in VMD. Use the command <code class="docutils literal notranslate"><span class="pre">sirah-help</span></code> in the Tcl/Tk console of VMD to access the manual pages. To learn about SIRAH Tools’ capabilities, you can also go to the <a class="reference internal" href="Tutorials%20sirahtools.html#sirah-tools"><span class="std std-ref">SIRAH Tools tutorial</span></a>.</p>
+</div>
+</section>
+<section id="how-to-modify-input-files">
+<h3>1.7 How to modify input files<a class="headerlink" href="#how-to-modify-input-files" title="Link to this heading"></a></h3>
+<p>The provided NAMD input files were created using the information from this tutorial; for other systems, check and carefully adjust the inputs in accordance with the tips bellow.</p>
+<section id="all-files">
+<h4>1.7.1 All files<a class="headerlink" href="#all-files" title="Link to this heading"></a></h4>
+<p>For all NAMD input (<code class="docutils literal notranslate"><span class="pre">*.conf</span></code>) files:</p>
+<ol class="arabic simple">
+<li><p>Change input file names:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">amber         on                           ;# Turns on the AMBER Format inputs</span>
+<span class="go">parmfile      your_system.prmtop           ;# File containing the force field parameters</span>
+<span class="go">coordinates   your_system.pdb              ;# File containing initial coordinates</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Change output file names:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">set outputName     your_output_name        ;# Base name of output simulation files</span>
+</pre></div>
+</div>
+</section>
+<section id="energy-minimization">
+<h4>1.7.2 Energy minimization<a class="headerlink" href="#energy-minimization" title="Link to this heading"></a></h4>
+<p>For <code class="docutils literal notranslate"><span class="pre">em1.conf</span></code>:</p>
+<ol class="arabic simple">
+<li><p>Assign the file name of the restriction file in consref and conskfile line:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span>Constraints<span class="w"> </span>on<span class="w"> </span>the<span class="w"> </span>Backbone
+<span class="go">if {1} {                                  ;# If 1 read the block</span>
+<span class="go">constraints          on                   ;# Turns on constraints</span>
+<span class="go">consref              your_restraints.pdb  ;# Reference PDB file for constraint positions</span>
+<span class="go">conskfile            your_restraints.pdb  ;# File containing constraint force constants</span>
+<span class="go">constraintScaling    1                    ;# Scaling factor for constraint forces</span>
+<span class="go">consexp              2                    ;# Exponent for constraint potential</span>
+<span class="go">conskcol             B                    ;# Column for constraint forces in the pdb file</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Set periodic cell information with the values from your rst file. NAMD will not read the box information from the crd/rst file generated from tLEaP. Instead you will have to specify the box information using the cellBasisVector flag. Rewrite the information from the last line of the rst file to this format. To check the last line you can use:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>your_system.rst
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dx<span class="w">    </span>dy<span class="w">    </span>dz<span class="w">    </span><span class="m">90</span>.0000000<span class="w">  </span><span class="m">90</span>.0000000<span class="w">  </span><span class="m">90</span>.0000000
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Periodic<span class="w"> </span>Cell
+<span class="go">if {1} {</span>
+<span class="go">cellBasisVector1    dx         00.0000    00.0000</span>
+<span class="go">cellBasisVector2    00.0000    dy         00.0000</span>
+<span class="go">cellBasisVector3    00.0000    00.0000    dz</span>
+<span class="go">cellOrigin          00.0000    00.0000    00.0000</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The method of setting periodic cell information for NAMD by directly utilizing the final line values from the rst file is only applicable to cubic periodic boxes. For non-cubic periodic box, such as truncated octahedron or rhombic dodecahedron, the values are determined by specific calculations using the length of the edge of the box for each kind. Refer to the section <em>using non-cubic periodic boxes</em> in the tutorial <a class="reference external" href="https://ambermd.org/namd/namd_amber.html">Using the Amber force field in NAMD</a>.</p>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">em2.conf</span></code>:</p>
+<ol class="arabic simple">
+<li><p>Now, in the <strong>input parameters</strong> section, include the block that sets the end of the previous minimization stage as the starting point:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">if {1} {                                    ;# This block checks for a restart files from a previous simulation (Minimization_01)</span>
+<span class="go">set inputname      yourMinimization_01      ;# Root name for restart files</span>
+<span class="go">binCoordinates     $inputname.restart.coor  ;# Read coordinate restart file</span>
+<span class="gp">#</span>binVelocities<span class="w">     </span><span class="nv">$inputname</span>.restart.vel<span class="w">   </span><span class="p">;</span><span class="c1"># Read velocity restart file</span>
+<span class="go">extendedSystem     $inputname.restart.xsc   ;# Read extended system restart file</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<p>The flag <cite>binVelocities</cite> is commented because the previous minimization stage does not assign velocity values.</p>
+<ol class="arabic simple" start="2">
+<li><p>From now on, the <cite>Periodic Cell</cite> block at <strong>simulation parameters</strong> section will remain disabled (if {0}) because the box size will be read from the previous stage.</p></li>
+<li><p>At this stage, the restraint block in the <strong>additional parameters</strong> section is disabled (if {0}) so that the minimization is carried out without any restraints. However, if you need to use restraints you can enable this section (if {1}).</p></li>
+</ol>
+</section>
+<section id="heating">
+<h4>1.7.3 Heating<a class="headerlink" href="#heating" title="Link to this heading"></a></h4>
+<p>For <code class="docutils literal notranslate"><span class="pre">heat.conf</span></code>, we will gradually bring the system up to the target temperature while maintaining control of the thermostat and barostat. This stage is performed with restraints on the backbone <code class="docutils literal notranslate"><span class="pre">bb_restraints.pdb</span></code>.</p>
+<ol class="arabic simple">
+<li><p>In the <strong>simulation parameters</strong> section, the temperature and pressure control blocks are enabled (if {1}). Particularly the langevin and langevinPiston options, which control the thermostat and barostat, respectively. Change it as needed.</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Temperature<span class="w"> </span>control
+<span class="go">if {1} {                     ;# If 0 don&#39;t read the block</span>
+<span class="go">langevin           on        ;# Turns off Langevin thermostat</span>
+<span class="go">langevinDamping    50        ;# Damping coefficient  gamma of 50/ps</span>
+<span class="go">langevinHydrogen   off       ;# Turns off Langevin dynamics for hydrogen atoms (if on)</span>
+<span class="go">langevinTemp       60        ;# Temperature target for Langevin dynamics (if on)</span>
+<span class="go">}</span>
+
+<span class="gp"># </span>Pressure<span class="w">  </span>control
+<span class="go">if {1} {                     ;# If 0 don&#39;t read the block</span>
+<span class="go">useGroupPressure     no      ;# Disables group pressure control</span>
+<span class="go">useFlexibleCell      no      ;# Disables flexible cell (not for water boxes)</span>
+<span class="go">useConstantArea      no      ;# Disables constant area control (not for water boxes)</span>
+<span class="go">langevinPiston       on      ;# Enable Langevin piston for pressure control (off by default)</span>
+<span class="go">langevinPistonTarget 1.01325 ;# Target pressure for Langevin piston (in bar) (if on).</span>
+<span class="go">langevinPistonPeriod 200.    ;# Period of the Langevin piston (if on)</span>
+<span class="go">langevinPistonDecay  100.    ;# Decay time of the Langevin piston (if on)</span>
+<span class="go">langevinPistonTemp   60      ;# Temperature target for Langevin piston (if on)</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>In the <strong>execution instructions</strong> section, there is a script that in <cite>nSteps</cite> progressively increases the temperature by adjusting the parameters of the barostat and thermostat. You can modify it to suit your desired temperature:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">set Temp    300                               ;# Set temperature  target</span>
+<span class="go">set barostat 1                                ;# Set pressure target</span>
+<span class="go">set nSteps    600                             ;# Defines the number of simulation steps to run per temperature increment</span>
+<span class="gp"># </span><span class="k">for</span><span class="w"> </span>loop<span class="w"> </span>iterates<span class="w"> </span>through<span class="w"> </span>a<span class="w"> </span>temperature<span class="w"> </span>range
+<span class="go">for {set t 60} {$t &lt;= $Temp} {incr t} {run $nSteps;langevintemp $t;if {$barostat} {langevinpistontemp $t}}</span>
+</pre></div>
+</div>
+</section>
+<section id="equilibration">
+<h4>1.7.4 Equilibration<a class="headerlink" href="#equilibration" title="Link to this heading"></a></h4>
+<p>For <code class="docutils literal notranslate"><span class="pre">eq1.conf</span></code>:</p>
+<ol class="arabic simple">
+<li><p>Enable the <strong>additional parameters</strong> section (if {1}) so that the equilibration is carried out with restraints to the whole protein. In order to accomplish this, the restriction file <code class="docutils literal notranslate"><span class="pre">prot_restraints.pdb</span></code> should be assigned to the consref and conskfile lines:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Constraints<span class="w"> </span>of<span class="w"> </span>protein
+<span class="go">if {1} {                                   ;# If 1 read the block</span>
+<span class="go">constraints           on                   ;# Turns on constraints</span>
+<span class="go">consref               your_restraints.pdb  ;# Reference PDB file for constraint positions</span>
+<span class="go">conskfile             your_restraints.pdb  ;# File containing constraint force constants</span>
+<span class="go">constraintScaling     1                    ;# Scaling factor for constraint forces</span>
+<span class="go">consexp               2                    ;# Exponent for constraint potential</span>
+<span class="go">conskcol              B                    ;# Column for constraint forces in the pdb file</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">eq2.conf</span></code>:</p>
+<ol class="arabic simple">
+<li><p>Enable the <strong>additional parameters</strong> section (if {1}) so that the equilibration is carried out with a small restraint on the backbone. In order to accomplish this, the restriction file <code class="docutils literal notranslate"><span class="pre">bb_restraints.pdb</span></code> should be assigned to the consref and conskfile lines and the constraintScaling should be set to 0.1:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Constraints<span class="w"> </span>of<span class="w"> </span>protein
+<span class="go">if {1} {                                   ;# If 1 read the block</span>
+<span class="go">constraints           on                   ;# Turns on constraints</span>
+<span class="go">consref               your_restraints.pdb  ;# Reference PDB file for constraint positions</span>
+<span class="go">conskfile             your_restraints.pdb  ;# File containing constraint force constants</span>
+<span class="go">constraintScaling     0.1                  ;# Scaling factor for constraint forces</span>
+<span class="go">consexp               2                    ;# Exponent for constraint potential</span>
+<span class="go">conskcol              B                    ;# Column for constraint forces in the pdb file</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</section>
+<section id="production">
+<h4>1.7.5 Production<a class="headerlink" href="#production" title="Link to this heading"></a></h4>
+<p>For <code class="docutils literal notranslate"><span class="pre">md.conf</span></code>:</p>
+<ol class="arabic simple">
+<li><p>At this stage, the restraint block in the <strong>additional parameters</strong> section is disabled (if {0}) so that the production stage is carried out without any restraints.</p></li>
+</ol>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Tutorials%20gromacs.html" class="btn btn-neutral float-left" title="GROMACS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Tutorials%20sirahtools.html" class="btn btn-neutral float-right" title="SIRAH tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, BA, SL, SM.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

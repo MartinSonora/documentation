@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visualization of CG systems &mdash; SIRAH Force Field  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=3437f865" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SIRAH Force Field
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../About%20SIRAH.html">About SIRAH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Background%20SIRAH.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Citation.html">Citations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Further%20reading.html">Further Reading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../FAQ.html">FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Developers.html">Developers</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials%20amber.html">AMBER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials%20gromacs.html">GROMACS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials%20namd.html">NAMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials%20sirahtools.html">SIRAH tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials%20analysis.html">Basic analyses VMD</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SIRAH Force Field</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Visualization of CG systems</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/SIRAHTools/Tutorial-tcl.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please report bugs, errors or enhancement requests through <a class="reference external" href="https://github.com/SIRAHFF/documentation/issues">Issue Tracker</a> or if you have a question about SIRAH open a <a class="reference external" href="https://github.com/SIRAHFF/documentation/discussions">New Discussion</a>.</p>
+</div>
+<p>This tutorial shows how to visualize and analize trajectory files using the <strong>SIRAH Tools</strong> plugin for VMD. The main reference
+for this tutorial is <a class="reference external" href="https://academic.oup.com/bioinformatics/article/32/10/1568/1743152">Machado &amp; Pantano</a>. The protein−DNA complex used here is the 3′ Repair Exonuclease 1 (TREX 1, PDB id: <a class="reference external" href="https://www.rcsb.org/structure/5YWS">5YWS</a>) and its simulation was previously dicussed by <a class="reference external" href="https://doi.org/10.1021/acs.jcim.0c00160">Klein et al.</a>. We strongly advise you to read these articles before starting the tutorial.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This tutorial requires the use of <strong>VMD</strong> and <strong>AmberTools</strong>. Install these applications if you do not already have them. If you need to install any of these applications, visit the following websites for installation instructions and additional information: <a class="reference external" href="https://ambermd.org/GetAmber.php#ambertools">Install AmberTools</a> and <a class="reference external" href="https://www.ks.uiuc.edu/Research/vmd/current/ig/node6.html">VMD installation guide</a>.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In this tutorial, we will focus on the <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> plugin. The utilization of the SIRAH Tools scripts <code class="docutils literal notranslate"><span class="pre">cgconv.pl</span></code> to map AA to CG, and <code class="docutils literal notranslate"><span class="pre">g_top2psf.pl</span></code> to convert GROMACS’ topologies to PSF files, is covered elsewhere in the documentation. We recommend that you review the other tutorial sections.</p>
+</div>
+<section id="visualization-of-cg-systems">
+<h1>Visualization of CG systems<a class="headerlink" href="#visualization-of-cg-systems" title="Link to this heading"></a></h1>
+<p>One of the features of the SIRAH Tools plugin for VMD, <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code>, is that it improves the visualization and analysis of SIRAH’s CG trajectories. This plugin sets the correct van der Waals radii, sets the correct coloring code by atom and residue types, and has macros for selecting molecular components on SIRAH trajectories.</p>
+<p>After processing the output trajectory to account for the Periodic Boundary Conditions (PBC) (see <span class="xref std std-ref">Amber</span>, <a class="reference internal" href="../Tutorials%20gromacs.html#id1"><span class="std std-ref">GROMACS</span></a> or <a class="reference internal" href="../Tutorials%20namd.html#id1"><span class="std std-ref">NAMD</span></a> tutorials for examples of how you can do this), load the processed trajectory and the <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> file in VMD:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vmd<span class="w"> </span>../5YWS_cg.psf<span class="w"> </span>5YWS_cg_md_pbc.xtc<span class="w"> </span>-e<span class="w"> </span>../sirah.ff/tools/sirah_vmdtk.tcl
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can also load <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> inside VMD. Go to <em>Extensions</em> &gt; <em>Tk Console</em> and enter:</p>
+<p><strong>For AMBER</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>../sirah.amber/tools/sirah_vmdtk.tcl
+</pre></div>
+</div>
+<p><strong>For GROMACS</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>../sirah.ff/tools/sirah_vmdtk.tcl
+</pre></div>
+</div>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> file loaded, you can access the <code class="docutils literal notranslate"><span class="pre">sirah_help</span></code> feature by going to <em>Extensions</em> &gt; <em>Tk Console</em> and entering</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sirah_help</span>
+</pre></div>
+</div>
+<p>The output will be the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;&gt; sirah_help &lt;&lt;&lt;&lt;</span>
+
+<span class="go">Manual version: 1.1 \[Mar 2019\]</span>
+
+<span class="go">Description:</span>
+
+<span class="go">        Command to access the User Manual pages of SIRAH Tools</span>
+
+<span class="go">Usage: sirah_help CommandName</span>
+
+<span class="go">CommandName       Function</span>
+<span class="go">-----------------------------------------------------------------</span>
+<span class="go">        sirah_ss        Calculate secondary structure in SIRAH proteins</span>
+<span class="go">        sirah_backmap   Backmap coarse-grained to atomistic systems</span>
+<span class="go">        sirah_restype   Set SIRAH residue types</span>
+<span class="go">        sirah_radii     Set SIRAH vdW radii</span>
+<span class="go">        sirah_macros    Set useful selection macros</span>
+<span class="go">        sirah_help      Access User Manual pages</span>
+<span class="go">-----------------------------------------------------------------</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> is not loaded in VMD, the trajectory will still be loaded, but the correct bead sizes, residue types, charges, etc. will not be generated (see <strong>Figure 1</strong>).</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/sirah_tools_1.png"><img alt="../_images/sirah_tools_1.png" src="../_images/sirah_tools_1.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 1.</strong> SIRAH CG simulation loaded in VMD. A) The trajectory imported without the <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> plugin. B) Trajectory imported using the <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> plugin.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="sirah-macros">
+<h2>SIRAH macros<a class="headerlink" href="#sirah-macros" title="Link to this heading"></a></h2>
+<p>In VMD, a macro is a text that represents a selection. Macros are a useful feature of VMD when you use certain selections often. In the SIRAH Tools plugin for VMD, <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code>, 10 macros are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_membrane</span></code> - select only lipid residues;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_nucleic</span></code> - select only acid nucleic residues;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_protein</span></code> - select only protein residues;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_basic</span></code> - select only basic amino acid residues;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_acidic</span></code> - select only acidic amino acid residues;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_polar</span></code> - select only polar amino acid residues;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_neutral</span></code> - select only neutral amino acid residues;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_backbone</span></code> - select the backbone beads of protein (GN, GC, and GO) and acid nucleic (PX, C5X, and O3’);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_water</span></code> - select all solvent available in the force field (WT4 and WLS);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sirah_ions</span></code> - select all ions available in the force field (KW, NaW, ClW, MgX, CaX, and ZnX).</p></li>
+</ul>
+<p>To use any SIRAH macro, go to <em>Graphics</em> &gt; <em>Representations</em> (See <strong>Figure 2</strong>) and click on the <em>Create Rep</em> button. In the <em>Selected Atoms</em> box, erase the text that appears there and type any of the available macros above.</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="../_images/sirah_tools_2.png"><img alt="../_images/sirah_tools_2.png" src="../_images/sirah_tools_2.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 2.</strong> Our trajectory loaded in VMD with the default representation and without any selection.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To see all available VMD’s <em>Singlewords</em>, click on the <em>Selections</em> tab in the <em>Graphics</em> &gt; <em>Representations</em> window and look through the <em>Singlewords</em> panel. You can also double-click on a singleword, and then, click on the <em>Apply</em> button to use a VMD Macro.</p>
+</div>
+<p>Since our system is a protein−DNA complex with coordinating magnesium ions, you can use four macros: <code class="docutils literal notranslate"><span class="pre">sirah_protein</span></code> (see <strong>Figure 3A</strong>), <code class="docutils literal notranslate"><span class="pre">sirah_nucleic</span></code> (see <strong>Figure 3B</strong>), <code class="docutils literal notranslate"><span class="pre">sirah_water</span></code> (see <strong>Figure 3C</strong>), and <code class="docutils literal notranslate"><span class="pre">sirah_ions</span></code> (see <strong>Figure 3D</strong>).</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="../_images/sirah_tools_3.png"><img alt="../_images/sirah_tools_3.png" src="../_images/sirah_tools_3.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 3.</strong> Each of the macros of our systems shown as a single image. A) The <code class="docutils literal notranslate"><span class="pre">sirah_protein</span></code> macro using <em>Licorice</em> as <em>Drawing Method</em>. The backbone beads of the protein are pink, and the sidechains ones are blue when using the <em>Coloring Method</em> Name. B) The <code class="docutils literal notranslate"><span class="pre">sirah_nucleic</span></code> macro using the <em>Licorice</em> as <em>Drawing Method</em>. For the DNA, the backbone beads PX, C5X, and O3’ are colored dark yellow, cyan, and red, respectively, and the sidechain ones are colored red and blue using the <em>Coloring Method</em> Name. C) The <code class="docutils literal notranslate"><span class="pre">sirah_water</span></code> macro using the <em>CPK</em> as <em>Drawing Method</em>. In this system, only WT4 was used and is colored green by the <em>Coloring Method</em> Name. D) The <code class="docutils literal notranslate"><span class="pre">sirah_ions</span></code> macro using the <em>VDW</em> as <em>Drawing Method</em>. The ClW, NaW, and MgW ions are colored cyan, blue, and purple, respectively, when using the <em>Coloring Method</em> Name.</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>To use all representations together, just create different representations for each one (clicking on the <em>Create Rep</em> button in the <em>Graphics</em> &gt; <em>Representations</em> window). Your protein-DNA complex should now look similar to the one in <strong>Figure 4</strong>.</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="../_images/sirah_tools_4.png"><img alt="../_images/sirah_tools_4.png" src="../_images/sirah_tools_4.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 4.</strong> Our protein-DNA complex after using the SIRAH macros <code class="docutils literal notranslate"><span class="pre">sirah_backbone</span></code>, <code class="docutils literal notranslate"><span class="pre">sirah_water</span></code>, and <code class="docutils literal notranslate"><span class="pre">sirah_ions</span></code>. To improve visualization, we used Licorice as <em>Drawing Method</em> for <code class="docutils literal notranslate"><span class="pre">sirah_backbone</span></code> and CPK for <code class="docutils literal notranslate"><span class="pre">sirah_water</span></code> and <code class="docutils literal notranslate"><span class="pre">sirah_ions</span></code>. In addition, the <em>Material</em> of the water beads was changed to Ghost and we hid some elements of the system.</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>As you can see, macros can be very useful and when saving your work in a saved state (<em>File</em> &gt; <em>Save Visualization State</em>), macros are included in the saved state file to be used later (<em>File</em> &gt; <em>Load Visualization State</em>).</p>
+</div>
+</section>
+</section>
+<section id="structural-analysis-of-cg-systems">
+<h1>Structural analysis of CG systems<a class="headerlink" href="#structural-analysis-of-cg-systems" title="Link to this heading"></a></h1>
+<p>Besides the features that enhance the visualization of SIRAH CG simulations, two additional SIRAH Tools features can be used to analyze the trajectory: <code class="docutils literal notranslate"><span class="pre">sirah_ss</span></code> and <code class="docutils literal notranslate"><span class="pre">sirah_backmap</span></code>. They will be discussed below.</p>
+<section id="secondary-structure-analysis">
+<h2>Secondary structure analysis<a class="headerlink" href="#secondary-structure-analysis" title="Link to this heading"></a></h2>
+<p>The utility <code class="docutils literal notranslate"><span class="pre">sirah_ss</span></code> assigns secondary structures to CG proteins in SIRAH, classifying residues into <em>α-helix (H)</em>, <em>extended β-sheet (E)</em> or, otherwise, <em>coil (C)</em> conformations, based on the instantaneous values of the backbone’s torsional angles and Hydrogen bond-like (HB) interactions (see <a class="reference external" href="https://academic.oup.com/bioinformatics/article/32/10/1568/1743152">Machado &amp; Pantano</a> for more information). The <code class="docutils literal notranslate"><span class="pre">sirah_ss</span></code> feature produces ASCII files of average and by-frame results, which can be visualized as color plots using the python script <code class="docutils literal notranslate"><span class="pre">plot_ss.py</span></code>.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> file loaded, you can access the <code class="docutils literal notranslate"><span class="pre">sirah_help</span></code> feature by going to <em>Extensions</em> &gt; <em>Tk Console</em> and entering</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sirah_help</span>
+</pre></div>
+</div>
+<p>to see all the SIRAH tools available options. Or, you can go straight to the help for the <code class="docutils literal notranslate"><span class="pre">sirah_ss</span></code> feature by typing</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sirah_ss help</span>
+</pre></div>
+</div>
+<p>The output will be the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;&gt; sirah_ss &lt;&lt;&lt;&lt;</span>
+
+<span class="go">version: 1.1 [Dec 2015]</span>
+
+<span class="go">Description:</span>
+
+<span class="go">  Command to calculate the secondary structure of SIRAH proteins.</span>
+
+<span class="go">  If mol is omitted then all options are applied to top molecule.</span>
+<span class="go">  By default, the secondary structure data is stored in memory</span>
+<span class="go">  as the array sscache_data(mol,frame) and the coloring method</span>
+<span class="go">  &#39;Secondary Structure&#39; will display correctly. By default, the</span>
+<span class="go">  script reads the sscache_data if available in memory and does</span>
+<span class="go">  not recalculate the conformation, unless flag ramach is set or</span>
+<span class="go">  the sscache_data is cleaned. The outname and noprint keywords</span>
+<span class="go">  control the generated output files.</span>
+
+<span class="go">  The current command version does not support PBC options.</span>
+
+<span class="go">Usage: sirah_ss [options]</span>
+
+<span class="go">Options: These are the optional arguments</span>
+
+<span class="go">  mol       Set the molecule ID, default top</span>
+
+<span class="go">  first     First frame to analyze</span>
+
+<span class="go">  last      Last frame to analyze</span>
+
+<span class="go">  sel       &quot;VMD selection&quot;, default &quot;all&quot;</span>
+
+<span class="go">  outname   List {} of keywords and names for output files.</span>
+<span class="go">            Keywords and default names:</span>
+
+<span class="go">              byframe   ss_by_frame.xvg</span>
+<span class="go">              byres     ss_by_res.xvg</span>
+<span class="go">              global    ss_global.xvg</span>
+<span class="go">              mtx       ss.mtx</span>
+<span class="go">              phi       phi.mtx</span>
+<span class="go">              psi       psi.mtx</span>
+
+<span class="go">  load      Load secondary structure data from file (e.g ss.mtx) into molecule (mol)</span>
+
+<span class="go">  noprint   Flag to avoid printing standard results to out files</span>
+
+<span class="go">  ramach    Flag to write phi and psi angles of residue selection (sel) to out files</span>
+
+<span class="go">  nocahe    Flag to avoid saving data to sscache_data</span>
+
+<span class="go">  now       Flag to calculate the secondary structure at current frame.</span>
+<span class="go">            No sscache_data or output file is saved.</span>
+
+<span class="go">  clean     Flag to clean the sscache_data of the selected molecule (mol) and exit</span>
+
+<span class="go">  help      Display help and exit</span>
+
+
+<span class="go">Examples:</span>
+
+<span class="go">  1.        Load secondary structure data into molecules 2 and extend the calculation</span>
+<span class="go">            sirah_ss mol 2 load ss.mtx</span>
+<span class="go">            sirah_ss mol 2</span>
+
+<span class="go">  2.        Set custom output file names</span>
+<span class="go">            sirah_ss outname {mtx myss.mtx byframe myss_by_frame.xvg}</span>
+</pre></div>
+</div>
+<p>All the available options for <code class="docutils literal notranslate"><span class="pre">sirah_ss</span></code> are documented in this help. By default, four outputs are created by <code class="docutils literal notranslate"><span class="pre">sirah_ss</span></code>: <code class="docutils literal notranslate"><span class="pre">ss_by_frame.xvg</span></code>, <code class="docutils literal notranslate"><span class="pre">ss_by_res.xvg</span></code>, <code class="docutils literal notranslate"><span class="pre">ss_global.xvg</span></code> and <code class="docutils literal notranslate"><span class="pre">ss.mtx</span></code>. The <code class="docutils literal notranslate"><span class="pre">ss_by_frame.xvg</span></code> file gives the secondary structure percentages of the three classifications (H, E, or C) by each frame of the simulations. The <code class="docutils literal notranslate"><span class="pre">ss_by_res.xvg</span></code> file gives the secondary structure percentages of H, E, and C by each residue. The <code class="docutils literal notranslate"><span class="pre">ss_global.xvg</span></code> file shows the overall percentages and standard deviation of H, E, and C of the entire simulation. And the <code class="docutils literal notranslate"><span class="pre">ss.mtx</span></code> file gives a matrix of the secondary structure transitions, between H, E, or C, of the residues versus the simulation time.</p>
+<p>You can also choose which molecule and which frames to analyze. To calculate the secondary structure for the protein (loaded on <em>top</em>) on all frames, for instance, you must modify the default <code class="docutils literal notranslate"><span class="pre">sirah_ss</span></code> selection from <em>all</em> to <em>sirah_protein</em>. To achieve this, you can enter:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sirah_ss sel &quot;sirah_protein&quot;</span>
+</pre></div>
+</div>
+<p>This will, by default, calculate the secondary structure for all frames of the trajectory of our selection and generate the four files.</p>
+<p>Furthermore, we have prepared a python script <code class="docutils literal notranslate"><span class="pre">plot_ss.py</span></code> that can be used to plot three of the four files (<code class="docutils literal notranslate"><span class="pre">ss_by_frame.xvg</span></code>, <code class="docutils literal notranslate"><span class="pre">ss_by_res.xvg</span></code> and <code class="docutils literal notranslate"><span class="pre">ss.mtx</span></code>).</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">plot_ss.py</span></code> script works properly with <strong>Python 3.9</strong>. You can for example create a conda environment using:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda create --name plot_ss python=3.9</span>
+</pre></div>
+</div>
+<p>and activate it using:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda activate plot_ss</span>
+</pre></div>
+</div>
+<p>Finally check de python version:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python --version</span>
+</pre></div>
+</div>
+</div>
+<p>Once you know you are using the right version of Python, you can use the <code class="docutils literal notranslate"><span class="pre">plot_ss.py</span></code> script by typing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">../</span><span class="n">sirah</span><span class="o">.</span><span class="n">ff</span><span class="o">/</span><span class="n">tools</span><span class="o">/</span><span class="n">plot_ss</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">../</span><span class="n">sirah</span><span class="o">.</span><span class="n">amber</span><span class="o">/</span><span class="n">tools</span><span class="o">/</span><span class="n">plot_ss</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>This will show us the options you have within the script, most of the flags are for changing the appearance of the graph (colors, font size, label size, etc).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Create a PNG image from an input file (ss.mtx, ss_by_frame.xvg, or ss_by_res.xvg) generated by SIRAH.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            Show this help message and exit</span>
+<span class="go">  -i [input]            Input file name (ss.mtx, ss_by_frame.xvg, ss_by_res.xvg)</span>
+<span class="go">  -d [dpi]              DPI (dots per inch) for saving the figure (default: 300)</span>
+<span class="go">  -tu [tu]              Time unit (us or ns) (default: us)</span>
+<span class="go">  -dt [dt]              Time between consecutive frames (default: 1e-04)</span>
+<span class="go">  -H [helix-color]      Alpha-helix color (default: darkviolet)</span>
+<span class="go">  -E [beta-sheet color] Beta-sheet color (default: yellow)</span>
+<span class="go">  -C [coil color]       Coil color (default: aqua)</span>
+<span class="go">  -o [out name]         Image output name (default: input name)</span>
+<span class="go">  -wt [width]           Image width (inches) (default: 10)</span>
+<span class="go">  -ht [height]          Image height (inches) (default: 8)</span>
+<span class="go">  -xfs [xlab fontsize]  Fontsize for x-axis labels (default: 14)</span>
+<span class="go">  -yfs [ylab fontsize]  Fontsize for y-axis labels (default: 14)</span>
+<span class="go">  -yticks [y # ticks]   Number of major tick locators on the y-axis (default: 10)</span>
+<span class="go">  -xticks [x # ticks]   Number of major tick locators on the x-axis (default: 10)</span>
+<span class="go">  -xtsize [xtsize]      Size of ticks on the x-axis (default: 12)</span>
+<span class="go">  -ytsize [ytsize]      Size of ticks on the y-axis (default: 12)</span>
+<span class="go">  -title [title]        Title of the plot (default: None)</span>
+<span class="go">  -ttsize [title_size]  Size of the plot title (default: 16)</span>
+<span class="go">  --version             Print version and exit</span>
+</pre></div>
+</div>
+<p>The basic use of the script is:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python ../sirah.ff/tools/plot_ss.py -i filename</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python ../sirah.amber/tools/plot_ss.py -i filename</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">filename</span></code> is one of the files <code class="docutils literal notranslate"><span class="pre">ss_by_res.xvg</span></code>, <code class="docutils literal notranslate"><span class="pre">ss_by_frame.xvg</span></code> or <code class="docutils literal notranslate"><span class="pre">ss.mtx</span></code>.</p>
+<p>In the case of the <code class="docutils literal notranslate"><span class="pre">ss.mtx</span></code> matrix it may take some time (no more than a couple of minutes), so be patient.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To use the flags that modify the colors, any of the following entries is valid. For example, if you would like to use red as the color for the α-helix, you can type:</p>
+<p><code class="docutils literal notranslate"><span class="pre">-H</span> <span class="pre">red</span></code>
+<code class="docutils literal notranslate"><span class="pre">-H</span> <span class="pre">r</span></code>
+<code class="docutils literal notranslate"><span class="pre">-H</span> <span class="pre">&quot;red&quot;</span></code>
+<code class="docutils literal notranslate"><span class="pre">-H</span> <span class="pre">&quot;r&quot;</span></code>
+<code class="docutils literal notranslate"><span class="pre">-H</span> <span class="pre">&quot;#FF0000&quot;</span></code></p>
+<p>In the case of HEX code usage, quotation marks are required.</p>
+</div>
+<p>The script generates the plots shown in <strong>Figure 5</strong>, remember that you must plot one by one, selecting the filename according to your interest.</p>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="../_images/sirah_tools_5.png"><img alt="../_images/sirah_tools_5.png" src="../_images/sirah_tools_5.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 5.</strong> Outcomes of <code class="docutils literal notranslate"><span class="pre">plot_ss.py</span></code> where the secondary structural elements α-helix (H), extended β-sheet (E), and coil (C) are colored purple, yellow, and blue, respectively. A) The <code class="docutils literal notranslate"><span class="pre">ss.mtx</span></code> matrix plot shows the protein’s secondary structure transitions during the 3.0 μs MD simulation. B)  The <code class="docutils literal notranslate"><span class="pre">ss_by_frame.xvg</span></code> plot shows the three secondary structure elements (H, E, and C) percentages by each frame of the 3.0 μs MD simulation. C) The <code class="docutils literal notranslate"><span class="pre">ss_by_res.xvg</span></code> plot shows the three secondary structure elements (H, E, and C) percentages by each residue during the 3.0 μs MD simulation. Here, we put the three plots together and edited the figure to use only one legend. However, the script makes three separate plots, each with its own legend.</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The files <code class="docutils literal notranslate"><span class="pre">ss_by_res.xvg</span></code>, <code class="docutils literal notranslate"><span class="pre">ss_by_frame.xvg</span></code>, and <code class="docutils literal notranslate"><span class="pre">ss.mtx</span></code> can also be plotted using other plotting programs such as <a class="reference external" href="https://plasma-gate.weizmann.ac.il/Grace/">Grace</a> or <a class="reference external" href="https://www.r-project.org/">R</a>. In addition, the <code class="docutils literal notranslate"><span class="pre">plot_ss.py</span></code> script can be modified or improved according to the necessity of the user.</p>
+</div>
+</section>
+<section id="backmapping-analysis">
+<h2>Backmapping analysis<a class="headerlink" href="#backmapping-analysis" title="Link to this heading"></a></h2>
+<p>The utility <code class="docutils literal notranslate"><span class="pre">sirah_backmap</span></code> initially retrieves pseudo-atomistic information from the CG model. The atomistic positions are built on a by-residue basis following the geometrical reconstruction (internal coordinates) proposed by <a class="reference external" href="https://onlinelibrary.wiley.com/doi/10.1002/jcc.20237">Parsons et al.</a>. Bond distances and angles are derived from rough organic chemistry considerations stored in backmapping libraries. Next, the structures from the initial stage are protonated and minimized with the atomistic force field ff14SB within the tleap module of AmberTools.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">sirah_backmap</span></code> minimizes the structures after the backmapping procedure. <a class="reference external" href="http://ambermd.org/AmberTools.php">AmberTools</a> is used to accomplish the minimization task. Make sure AmberTools and the $AMBERHOME environment are set up properly. If you are using AmberTools via conda, AmberTools environment should be activated before opening VMD.</p>
+<p>However, the <code class="docutils literal notranslate"><span class="pre">nomin</span></code> option can be used to disable the minimization step. Consequently, you can minimize backmapped outputs by utilizing other software/force fields outside of VMD. Keep in mind that hydrogen atoms won’t be added to the structures if the minimization step is skipped.</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> file loaded, you can access the <code class="docutils literal notranslate"><span class="pre">sirah_help</span></code> feature by going to <em>Extensions</em> &gt; <em>Tk Console</em> and entering</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sirah_help</span>
+</pre></div>
+</div>
+<p>to see all the SIRAH tools available options. Or, you can go straight to the help for the <code class="docutils literal notranslate"><span class="pre">sirah_backmap</span></code> feature by typing</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sirah_backmap help</span>
+</pre></div>
+</div>
+<p>The output will be the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;&gt; sirah_backmap &lt;&lt;&lt;&lt;</span>
+
+<span class="go">version: 1.0 [Nov 2015]</span>
+
+<span class="go">Description:</span>
+
+<span class="go">  Command to recover atomistic information from coarse-grained or multiscale</span>
+<span class="go">  systems.</span>
+
+<span class="go">  Geometric operations are applied to reconstruct the atomic coordinates then</span>
+<span class="go">  a minimization is performed to refine the structure of the system.</span>
+<span class="go">  The minimization requires AMBERTOOLS 14 (free at http://ambermd.org/)</span>
+<span class="go">  or later properly installed. MPI option requires mpirun and parallel</span>
+<span class="go">  compilation of AMBER code. Be aware that small systems may fail to run or</span>
+<span class="go">  converge in parallel execution due to decomposition problems. Notice, the</span>
+<span class="go">  cuda version requires installing the AMBER licensed suite.</span>
+
+<span class="go">  By default, the force field ff14SB is used for the atomistic refinement,</span>
+<span class="go">  any residue or unit not defined within it will generate an execution error.</span>
+<span class="go">  The minimization protocol consists on 100+50 steps of steepest descent and</span>
+<span class="go">  conjugate gradient in vacuum conditions with a 0.12 nm cut-off for</span>
+<span class="go">  electrostatic.</span>
+
+<span class="go">  The current command version does not support PBC options, so make sure the</span>
+<span class="go">  molecules are whole before running the backmap.</span>
+
+<span class="go">Usage: sirah_backmap [options]</span>
+
+<span class="go">Options: These are the optional arguments</span>
+
+<span class="go">  mol       Set the molecule ID, default top.</span>
+
+<span class="go">  now       Backmap the current frame.</span>
+
+<span class="go">  first     First frame to process.</span>
+
+<span class="go">  last      Last frame to process.</span>
+
+<span class="go">  each      Process frames each number of steps, default 1.</span>
+
+<span class="go">  frames    List of frames to process, e.g. {1 2 10 21 22 23 30}.</span>
+
+<span class="go">  outname   Root names for output PDB file.</span>
+
+<span class="go">  noload    Flag to avoid loading the atomistic trajectory to the VMD session.</span>
+
+<span class="go">  nomin     Flag to avoid minimizing the system.</span>
+
+<span class="go">  mpi       MPI processes to use during minimization, default 1.</span>
+
+<span class="go">  cuda      Flag to use pmemd.cuda, sets gbsa on, cutoff to 999 and no MPI.</span>
+
+<span class="go">  gbsa      Flag to use implicit solvation GBSA (igb=1), default off (igb=0).</span>
+
+<span class="go">  cutoff    Set cut-off value (in angstroms) for non-bonded interactions, default 12.</span>
+
+<span class="go">  maxcyc    Set total number of minimization steps, default 150.</span>
+
+<span class="go">  ncyc      Set the initial number of steepest descent steps, default 100.</span>
+
+<span class="go">  help      Display help and exit.</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, backmapping libraries contain instructions for solute (proteins, DNA, and metal ions).</p>
+</div>
+<p>All the available options for <code class="docutils literal notranslate"><span class="pre">sirah_backmap</span></code> are documented in this help. By default, all trajectory frames are used. Due to the fact that our protein-DNA complex is a 3.0 μs MD simulation with 30,000 frames, processing the entire trajectory could take some time. Thus, we chose to analyze the trajectory by extracting one frame every 1,000 frames with the <code class="docutils literal notranslate"><span class="pre">each</span></code> option. To do that you type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sirah_backmap each 1000</span>
+</pre></div>
+</div>
+<p>The output is a 300-frame file named <code class="docutils literal notranslate"><span class="pre">backmap.pdb</span></code>. This file is displayed as an animated GIF in <strong>Figure 6</strong>.</p>
+<figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="../_images/backmapping_bad.gif"><img alt="../_images/backmapping_bad.gif" src="../_images/backmapping_bad.gif" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 6.</strong> The 300-frame backmapped all-atom output from the 3.0 μs MD simulation using the default minimization arguments of <code class="docutils literal notranslate"><span class="pre">sirah_backmap</span></code>.</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Always check both the original CG trajectory and the backmapping output to identify out-of-the-ordinary behavior and adjust arguments accordingly.</p>
+<p>Keep in mind that the minimized structures sometimes may differ from the CG trajectory due to the combination of all-atom minimization algorithms, number of cycles, cutoffs, etc.</p>
+<p>An example of this behavior is explained below.</p>
+</div>
+<p>The original atomistic PDB file shows that a few nucleotides at the DNA molecule’s extremities are unpaired, allowing them to interact with neighboring molecules. Since we used this original PDB file to generate our CG representation, we anticipated that the unpaired nucleotides would exhibit a flexible behavior. However, in the backmapped PDB file, you can observe that the DNA extremities undergo unusual deformations and movements. These events are not observed in the CG simulation, as shown in <strong>Figure 7</strong>.</p>
+<figure class="align-center" id="id8">
+<a class="reference internal image-reference" href="../_images/CG.gif"><img alt="../_images/CG.gif" src="../_images/CG.gif" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 7.</strong> The same 300-frame trajectory from the 3.0 μs MD simulation in CG representation does not show the unreal behavior at the DNA extremities.</span><a class="headerlink" href="#id8" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>In most cases, the default parameters of 100 steps of steepest descent (<code class="docutils literal notranslate"><span class="pre">ncyc</span></code>) and 50 steps of conjugate gradient (total of 150 <code class="docutils literal notranslate"><span class="pre">maxcyc</span></code> steps) in vacuum conditions are sufficient to produce a correct result. However, in this instance, they produced artifactual conformations that were absent in the CG simulation. To solve this, you can modify the total minimization steps to 50 for <code class="docutils literal notranslate"><span class="pre">maxcyc</span></code> and to 25 for <code class="docutils literal notranslate"><span class="pre">ncyc</span></code> as follows:</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Return the original CG trajectory’s <strong>top</strong> status in VMD prior to typing the command.</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sirah_backmap each 1000 maxcyc 50 ncyc 25</span>
+</pre></div>
+</div>
+<p>The output is a new 300-frame file named <code class="docutils literal notranslate"><span class="pre">backmap.pdb</span></code>, displayed as an animated GIF in <strong>Figure 8</strong>, exhibiting a similar behavior to the CG representation simulation.</p>
+<figure class="align-center" id="id9">
+<a class="reference internal image-reference" href="../_images/backmapping_ok.gif"><img alt="../_images/backmapping_ok.gif" src="../_images/backmapping_ok.gif" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 8.</strong> The final 300-frame backmapped output from the 3.0 μs MD simulation using less minimization steps by modifying the <code class="docutils literal notranslate"><span class="pre">maxcyc</span></code> and <code class="docutils literal notranslate"><span class="pre">ncyc</span></code> arguments of <code class="docutils literal notranslate"><span class="pre">sirah_backmap</span></code>.</span><a class="headerlink" href="#id9" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>It is important to try different combinations of settings to find the one that works best for your system. To keep the backmapped files, you can always change the output name with the <code class="docutils literal notranslate"><span class="pre">outname</span></code> option:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sirah_backmap each 1000 maxcyc 50 ncyc 25 outname backmap_less_min.pdb</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="vmd-in-text-mode">
+<h1>VMD in text mode<a class="headerlink" href="#vmd-in-text-mode" title="Link to this heading"></a></h1>
+<p>If you need to perform non-interactive analysis on large trajectories or if a graphical user interface is not available, you can also execute the SIRAH Tools plugin using VMD text mode. When in text mode, VMD does not provide a window for graphical output, but many of its features are available. To launch VMD in text mode, the <code class="docutils literal notranslate"><span class="pre">-dispdev</span> <span class="pre">text</span></code> and <code class="docutils literal notranslate"><span class="pre">-f</span></code> flags are appended to the command line used before to load the trajectory, as shown below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vmd<span class="w"> </span>-dispdev<span class="w"> </span>text<span class="w"> </span>-f<span class="w"> </span>../5YWS_cg.psf<span class="w"> </span>5YWS_cg_md_pbc.xtc<span class="w"> </span>-e<span class="w"> </span>../sirah.ff/tools/sirah_vmdtk.tcl
+</pre></div>
+</div>
+<p>The output will be similar to the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Info) VMD for LINUXAMD64, version 1.9.3 (November 30, 2016)</span>
+<span class="go">Info) http://www.ks.uiuc.edu/Research/vmd/</span>
+<span class="go">Info) Email questions and bug reports to vmd@ks.uiuc.edu</span>
+<span class="go">Info) Please include this reference in published work using VMD:</span>
+<span class="go">Info)    Humphrey, W., Dalke, A. and Schulten, K., `VMD - Visual</span>
+<span class="go">Info)    Molecular Dynamics&#39;, J. Molec. Graphics 1996, 14.1, 33-38.</span>
+<span class="go">Info) -------------------------------------------------------------</span>
+<span class="go">Info) Multithreading available, 12 CPUs detected.</span>
+<span class="go">Info)   CPU features: SSE2 AVX AVX2 FMA</span>
+<span class="go">Info) Free system memory: 58GB (93%)</span>
+<span class="go">Info) File loading in progress, please wait.</span>
+<span class="go">Info) Using plugin psf for structure file 5YWS_cg.psf</span>
+<span class="go">psfplugin) WARNING: no impropers defined in PSF file.</span>
+<span class="go">psfplugin) no cross-terms defined in PSF file.</span>
+<span class="go">Info) Analyzing structure ...</span>
+<span class="go">Info)    Atoms: 7270</span>
+<span class="go">Info)    Bonds: 10237</span>
+<span class="go">Info)    Angles: 4791  Dihedrals: 3727  Impropers: 0  Cross-terms: 0</span>
+<span class="go">Info)    Bondtypes: 0  Angletypes: 0  Dihedraltypes: 0  Impropertypes: 0</span>
+<span class="go">Info)    Residues: 1843</span>
+<span class="go">Info)    Waters: 0</span>
+<span class="go">Info)    Segments: 4</span>
+<span class="go">Info)    Fragments: 1592   Protein: 0   Nucleic: 0</span>
+<span class="go">Info) Using plugin xtc for coordinates from file 5YWS_cg_md_pbc.xtc</span>
+<span class="go">Info) Coordinate I/O rate 1564.4 frames/sec, 129 MB/sec, 19.2 sec</span>
+<span class="go">Info) Finished with coordinate file 5YWS_cg_md1_pbc.xtc.</span>
+<span class="go">SIRAH radii were set</span>
+<span class="go">SIRAH selection macros were set</span>
+<span class="go">SIRAH coloring mothods were set</span>
+<span class="go">SIRAH Tool kit for VMD was loaded. Use sirah_help to access the User Manual pages</span>
+<span class="go">vmd &gt;</span>
+</pre></div>
+</div>
+<p>The final lines indicate that SIRAH Tools were loaded correctly. Thus, in the <cite>vmd &gt;</cite> prompt, for instance, you can type <code class="docutils literal notranslate"><span class="pre">sirah_help</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vmd &gt; sirah_help</span>
+</pre></div>
+</div>
+<p>In this mode, the <code class="docutils literal notranslate"><span class="pre">sirah_ss</span></code> and <code class="docutils literal notranslate"><span class="pre">sirah_backmap</span></code> features can also be utilized. For example, if you want to calculate the secondary structure for the protein (loaded on <em>top</em>) on all frames, you type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">vmd &gt; sirah_ss sel &quot;sirah_protein&quot;</span>
+<span class="go"> 0    25   50   75   100 %</span>
+<span class="go">Progress |||||||||||||||||||||</span>
+<span class="go">Starting sscache... Done!</span>
+<span class="go">SUMMARY: &lt;H&gt; 36.8% &lt;E&gt; 16.2% &lt;C&gt; 47.1%</span>
+</pre></div>
+</div>
+<p>Additionally, you can construct customized scripts, that contain vmd commands, to load and process your trajectories with SIRAH Tools in VMD text mode. For example, you can create a <code class="docutils literal notranslate"><span class="pre">sirah_dispdev.tcl</span></code> file:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>vmd_commands.tcl
+<span class="go">mol new 5YWS_cg.psf</span>
+<span class="go">mol addfile 5YWS_cg_md_pbc.xtc waitfor all</span>
+<span class="go">source sirah.ff/tools/sirah_vmdtk.tcl</span>
+<span class="go">sirah_ss</span>
+<span class="go">sirah_backmap now nomin outname last_frame_backmap</span>
+<span class="go">quit</span>
+</pre></div>
+</div>
+<p>This script will load the topology <code class="docutils literal notranslate"><span class="pre">5YWS_cg.psf</span></code>, the trajectory <code class="docutils literal notranslate"><span class="pre">5YWS_cg_md_pbc.xtc</span></code>, and <code class="docutils literal notranslate"><span class="pre">sirah_vmdtk.tcl</span></code> files. Then, process secondary structure with <code class="docutils literal notranslate"><span class="pre">sirah_ss</span></code> and create a backmapped pdb of the last frame with <code class="docutils literal notranslate"><span class="pre">sirah_backmap</span></code> with the name <code class="docutils literal notranslate"><span class="pre">last_frame_backmap.pdb</span></code>. With the <code class="docutils literal notranslate"><span class="pre">quit</span></code> command, VMD is closed. To read the script, you type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vmd<span class="w"> </span>-dispdev<span class="w"> </span>text<span class="w"> </span>-e<span class="w"> </span>sirah_dispdev.tcl
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>You can find additional information on VMD command-line options <a class="reference external" href="https://www.ks.uiuc.edu/Research/vmd/vmd-1.8.7/ug/node204.html">here</a> and available text mode features <a class="reference external" href="https://www.ks.uiuc.edu/Training/Tutorials/vmd/tutorial-html/node8.html">here</a>.</p>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, BA, SL, SM.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
